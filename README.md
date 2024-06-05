@@ -1,6 +1,6 @@
 ### README.md
 
-# Projeto de Controle de Câmera com Teclado Virtual
+# Projeto de COMUNICACAO
 
 ## Descrição
 
