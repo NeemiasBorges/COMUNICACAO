@@ -13,7 +13,7 @@ def test_one_todo_list():
     assert list.get(0) == item
     assert list.get_owner() == owner
 
-def test_complete_item_from_todo_list():
+def test_complete_item_from_user_list():
     owner = User('Joe Doe', 'joe@doe.com', '1234')
     list = TodoList(owner)
     item = TodoItem('make bed', Priority.LOW)
@@ -22,7 +22,7 @@ def test_complete_item_from_todo_list():
     list.complete(0)
     assert item.is_completed() == True
 
-def test_remove_item_from_todo_list():
+def test_remove_item_from_user_list():
     owner = User('Joe Doe', 'joe@doe.com', '1234')
     list = TodoList(owner)
     item = TodoItem('make bed', Priority.LOW)
@@ -122,7 +122,7 @@ def test_change_item_description_from_todolist_duplicate():
     with pytest.raises(DuplicateItemError):
         list.change_description('make bed', 'call mom')
 
-def test_complete_item_from_todo_list():
+def test_complete_item_from_user_list():
     item1 = TodoItem('make bed', Priority.LOW)
     item2 = TodoItem('withdraw cash', Priority.MEDIUM)
     item3 = TodoItem('call mom', Priority.HIGH)
@@ -134,7 +134,7 @@ def test_complete_item_from_todo_list():
     list.complete_by_description('make bed')
     assert item1.is_completed() == True
 
-def test_complete_item_from_todo_list_reorder():
+def test_complete_item_from_user_list_reorder():
     item1 = TodoItem('make bed', Priority.LOW)
     item2 = TodoItem('withdraw cash', Priority.MEDIUM)
     item3 = TodoItem('call mom', Priority.HIGH)
@@ -147,7 +147,7 @@ def test_complete_item_from_todo_list_reorder():
     assert item3.is_completed() == True
     assert todolist.list[2] == item3
 
-def test_complete_item_from_todo_list_reorder():
+def test_complete_item_from_user_list_reorder():
     item1 = TodoItem('make bed', Priority.LOW)
     item2 = TodoItem('withdraw cash', Priority.MEDIUM)
     item3 = TodoItem('call mom', Priority.HIGH)

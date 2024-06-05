@@ -2,7 +2,7 @@ from src.entities.todolist import TodoList
 from src.usecases.errors.invalidusererror import InvalidUserError
 from src.usecases.errors.duplicatetodolisterror import DuplicateTodoListError
 
-class CreateTodoList:
+class CreateUserList:
     def __init__(self, user_repo, todolist_repo):
       self.user_repo = user_repo
       self.todolist_repo = todolist_repo
