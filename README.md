@@ -45,7 +45,7 @@ A arquitetura do projeto segue os princípios da Clean Architecture, dividindo o
 1. Clone o repositório:
 
     ```sh
-    git clone https://github.com/seu_usuario/seu_projeto.git
+    git clone [https://github.com/NeemiasBorges/COMUNICACAO.git]
     cd seu_projeto
     ```
 
