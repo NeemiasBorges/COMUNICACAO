@@ -102,8 +102,10 @@ A documentação da API é gerada usando Swagger e pode ser acessada através do
 ## Estrutura do Projeto
 
 ```
-.
-├── app/
+├──app_requirements
+|   ├── endpoints.txt
+|   ├── use-cases.txt
+├── src/
 │   ├── __init__.py
 │   ├── api/
 │   ├── application/
@@ -117,7 +119,7 @@ A documentação da API é gerada usando Swagger e pode ser acessada através do
 ├── tests/
 │   ├── __init__.py
 │   └── test_app.py
-|   |___ Global_Tests
+|   └── Global_Tests
 |       |__ Users
 |       |__ Configuracoes
 |       |__ Calibracao
@@ -126,6 +128,7 @@ A documentação da API é gerada usando Swagger e pode ser acessada através do
 ├── .env
 ├── requirements.txt
 └── README.md
+└── index.html
 ```
 
 ## Contribuição
