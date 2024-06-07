@@ -97,7 +97,8 @@ A documentação da API é gerada usando Swagger e pode ser acessada através do
 - **Teclado Virtual Completo:** Todas as teclas de um teclado padrão, incluindo espaço e deletar texto.
 - **Interface Responsiva:** Utilizando TailwindCSS para uma melhor experiência de usuário.
 - **Alternância de Tema:** Botão de alternância de tema claro e escuro no canto superior direito.
-
+- **Preview da tela de calibração:** Sera exibido a tela que o software esta capturando para possibilitar que o usuario consiga se guiar de forma mais natural
+  
 ## Estrutura do Projeto
 
 ```
@@ -116,12 +117,24 @@ A documentação da API é gerada usando Swagger e pode ser acessada através do
 ├── tests/
 │   ├── __init__.py
 │   └── test_app.py
+|   |___ Global_Tests
+|       |__ Users
+|       |__ Configuracoes
+|       |__ Calibracao
+|       |__ Contatos
+|       |__ Mensagens 
 ├── .env
 ├── requirements.txt
 └── README.md
 ```
 
 ## Contribuição
+
+## TO DO: 
+# Utilização do Docker
+- Conforme a evolução natural do software surgiu a possibilidade de utilizarmos Containers para modularizar o sofware e possibilidades o Deploy e alterações faceis em qualquer SO e ajustes
+# Verificar possibildiade de NoSQL - Bancos como Firebase
+- Devido a facilidade de deploy e testes, surgiu a possibilidade de utilizarmos bancos nao relacionais como forma de dar tração e facilitar a utilização do sofware para qualquer usuario
 
 Contribuições são bem-vindas! Por favor, envie um pull request ou abra uma issue para discutir as mudanças que gostaria de fazer.
 
