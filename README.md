@@ -25,7 +25,7 @@ Sistema web de comunicação alternativa usando tecnologia de rastreamento ocula
 
 1. Clone o repositório:
 ```bash
-[git clone https://github.com/seuusuario/COMUNICACAO.git](https://github.com/NeemiasBorges/COMUNICACAO.git)
+git clone https://github.com/seuusuario/COMUNICACAO.git
 cd COMUNICACAO
 ```
 
