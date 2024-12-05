@@ -1,0 +1,340 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calibração de Rastreamento Ocular</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #1a1a1a;
+            color: white;
+        }
+
+        .calibration-point {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .calibration-point::before,
+        .calibration-point::after {
+            content: '';
+            position: absolute;
+            background-color: red;
+        }
+
+        .calibration-point::before {
+            width: 40px;
+            height: 2px;
+            top: 9px;
+            left: -10px;
+        }
+
+        .calibration-point::after {
+            width: 2px;
+            height: 40px;
+            left: 9px;
+            top: -10px;
+        }
+
+        #calibration-status {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        #video-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 320px;
+            height: 240px;
+            border: 2px solid white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #video-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #control-interface {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        /* Estilos do teclado de figuras */
+        .keyboard-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #2a2a2a;
+            border-radius: 10px;
+        }
+
+        .keyboard-key {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #3a3a3a;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 1s ease;
+        }
+
+        .keyboard-key:hover {
+            transform: scale(0.9);
+            background-color: #4a4a4a;
+        }
+
+        .keyboard-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .keyboard-text {
+            font-size: 12px;
+            text-align: center;
+            background-color:white;
+            color:black;
+            font-weight: 900;
+            padding: 1px;
+        }
+
+        /* Cores específicas para cada categoria */
+        .category-grey { background-color: #808080; }
+        .category-yellow { background-color: #FFD700; }
+        .category-green { background-color: #90EE90; }
+        .category-pink { background-color: #FFB6C1; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="calibration-status">
+            Centralize o Rosto. Olhe para o alvo vermelho e Pressione a Tecla Espaço
+        </div>
+
+        <div id="video-container">
+            <img id="video-feed" src="{{ url_for('video_feed') }}" alt="Feed de vídeo">
+        </div>
+
+        <div id="control-interface">
+            <div class="keyboard-container">
+                <!-- Linha 1 -->
+                <div class="keyboard-key category-grey">
+                    <div class="keyboard-icon">❓</div>
+                    <div class="keyboard-text">O QUE</div>
+                </div>
+                <div class="keyboard-key category-yellow">
+                    <div class="keyboard-icon">👤</div>
+                    <div class="keyboard-text">EU</div>
+                </div>
+                <div class="keyboard-key category-green">
+                    <div class="keyboard-icon">🎯</div>
+                    <div class="keyboard-text">QUERO</div>
+                </div>
+                <div class="keyboard-key category-green">
+                    <div class="keyboard-icon">🍽️</div>
+                    <div class="keyboard-text">COMER</div>
+                </div>
+                <div class="keyboard-key category-pink">
+                    <div class="keyboard-icon">😔</div>
+                    <div class="keyboard-text">NÃO ME SINTO BEM</div>
+                </div>
+
+                <!-- Linha 2 -->
+                <div class="keyboard-key category-grey">
+                    <div class="keyboard-icon">🏠</div>
+                    <div class="keyboard-text">ONDE</div>
+                </div>
+                <div class="keyboard-key category-yellow">
+                    <div class="keyboard-icon">👆</div>
+                    <div class="keyboard-text">VOCÊ</div>
+                </div>
+                <div class="keyboard-key category-green">
+                    <div class="keyboard-icon">🔍</div>
+                    <div class="keyboard-text">PROCURAR</div>
+                </div>
+                <div class="keyboard-key category-green">
+                    <div class="keyboard-icon">🥤</div>
+                    <div class="keyboard-text">BEBER</div>
+                </div>
+                <div class="keyboard-key category-pink">
+                    <div class="keyboard-icon">❓</div>
+                    <div class="keyboard-text">NÃO ENTENDI</div>
+                </div>
+
+                <!-- Linha 3 -->
+                <div class="keyboard-key category-grey">
+                    <div class="keyboard-icon">⭕</div>
+                    <div class="keyboard-text">QUAL</div>
+                </div>
+                <div class="keyboard-key category-yellow">
+                    <div class="keyboard-icon">👥</div>
+                    <div class="keyboard-text">NÓS</div>
+                </div>
+                <div class="keyboard-key category-green">
+                    <div class="keyboard-icon">🛁</div>
+                    <div class="keyboard-text">TOMAR BANHO</div>
+                </div>
+                <div class="keyboard-key category-green">
+                    <div class="keyboard-icon">🧍</div>
+                    <div class="keyboard-text">ESTAR</div>
+                </div>
+                <div class="keyboard-key category-pink">
+                    <div class="keyboard-icon">🚽</div>
+                    <div class="keyboard-text">PRECISO IR AO BANHEIRO</div>
+                </div>
+            </div>
+
+            <h2>Controle de Rastreamento Ocular Ativo</h2>
+            <button class="button" onclick="stopTracking()">Parar Rastreamento</button>
+        </div>
+    </div>
+
+    <script>
+        const calibrationPoints = {
+            'top_left': { x: 50, y: 50 },
+            'top_right': { x: window.innerWidth - 50, y: 50 },
+            'bottom_left': { x: 50, y: window.innerHeight - 50 },
+            'bottom_right': { x: window.innerWidth - 50, y: window.innerHeight - 50 }
+        };
+
+        let currentPoint = null;
+        let isCalibrating = true;
+        let trackingInterval = null;
+
+        function createCalibrationPoint(position) {
+            const point = document.createElement('div');
+            point.className = 'calibration-point';
+            point.style.left = position.x + 'px';
+            point.style.top = position.y + 'px';
+            document.body.appendChild(point);
+            return point;
+        }
+
+        function showStatus(message) {
+            const status = document.getElementById('calibration-status');
+            status.style.display = 'block';
+            status.textContent = message;
+        }
+
+        async function calibratePoint() {
+            try {
+                const response = await fetch('/calibrate', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                if (data.status === 'complete') {
+                    completeCalibration();
+                } else if (data.status === 'success') {
+                    if (currentPoint) {
+                        currentPoint.remove();
+                    }
+                    currentPoint = createCalibrationPoint(calibrationPoints[data.next_point]);
+                    showStatus(`Centralize o Rosto. Olhe para o alvo vermelho e Pressione a Tecla Espaço`);
+                }
+            } catch (error) {
+                console.error('Erro de calibração:', error);
+                showStatus('Calibração falhou. Por favor, atualize a página e tente novamente.');
+            }
+        }
+
+        function completeCalibration() {
+            if (currentPoint) {
+                currentPoint.remove();
+            }
+            document.getElementById('calibration-status').style.display = 'none';
+            document.getElementById('control-interface').style.display = 'block';
+            isCalibrating = false;
+            startTracking();
+        }
+
+        function startTracking() {
+            trackingInterval = setInterval(updateMousePosition, 50);
+        }
+
+        function stopTracking() {
+            if (trackingInterval) {
+                clearInterval(trackingInterval);
+            }
+            document.getElementById('control-interface').style.display = 'none';
+            showStatus('Rastreamento parado. Atualize a página para recalibrar.');
+        }
+
+        async function updateMousePosition() {
+            try {
+                const response = await fetch('/get_mouse_position');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    window.moveTo(data.x, data.y);
+                }
+            } catch (error) {
+                console.error('Erro de rastreamento:', error);
+            }
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space' && isCalibrating) {
+                calibratePoint();
+            }
+        });
+
+        // Inicia calibração com o primeiro ponto
+        currentPoint = createCalibrationPoint(calibrationPoints['top_left']);
+        showStatus('Centralize o Rosto. Olhe para o alvo vermelho e Pressione a Tecla Espaço');
+    </script>
+</body>
+</html>
