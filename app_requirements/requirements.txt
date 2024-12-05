@@ -1,0 +1,6 @@
+opencv-python>=4.8.0
+mediapipe>=0.10.0
+pyautogui>=0.9.54
+Flask>=2.0.1
+Flask-CORS>=4.0.0
+pywin32>=305; platform_system=="Windows"
