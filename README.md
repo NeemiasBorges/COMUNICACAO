@@ -1,5 +1,4 @@
-# COMUNICACAO - Sistema de Comunicação por Rastreamento Ocular 👀
-
+# COMUNICACAO - Sistema de Comunicação por Rastreamento Ocular 
 Sistema web de comunicação alternativa usando tecnologia de rastreamento ocular para auxiliar usuários com limitações motoras através de um teclado pictográfico.
 
 ## Funcionalidades ⭐
