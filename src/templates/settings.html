@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configurações - Rastreamento Ocular</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+    <style>
+      .sidebar {
+        min-height: 100vh;
+      }
+
+      .main-content {
+        padding: 20px;
+      }
+
+      .nav-tabs .nav-link {
+        color: #495057;
+      }
+
+      .nav-tabs .nav-link.active {
+        font-weight: bold;
+        color: #0d6efd;
+      }
+
+      .profile-card {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+
+      .profile-card:hover {
+        background-color: #f8f9fa;
+      }
+
+      .board-item {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+
+      .board-item:hover {
+        background-color: #f8f9fa;
+      }
+
+      .key-preview {
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        text-align: center;
+        line-height: 60px;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        font-size: 24px;
+      }
+
+      .key-preview.grey {
+        background-color: #808080;
+        color: white;
+      }
+      .key-preview.yellow {
+        background-color: #ffd700;
+      }
+      .key-preview.green {
+        background-color: #90ee90;
+      }
+      .key-preview.pink {
+        background-color: #ffb6c1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-2 bg-dark text-white sidebar p-0">
+          <div class="d-flex flex-column flex-shrink-0 p-3 h-100">
+            <a
+              href="/"
+              class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
+            >
+              <span class="fs-4">ComuniAcao</span>
+            </a>
+            <hr />
+            <ul class="nav nav-pills flex-column mb-auto">
+              <li class="nav-item">
+                <a href="{{ url_for('index') }}" class="nav-link text-white">
+                  <i class="bi bi-grid me-2"></i>
+                  Comunicação
+                </a>
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('calibration') }}"
+                  class="nav-link text-white"
+                >
+                  <i class="bi bi-bullseye me-2"></i>
+                  Calibração
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('history') }}" class="nav-link text-white">
+                  <i class="bi bi-clock-history me-2"></i>
+                  Histórico
+                </a>
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('settings') }}"
+                  class="nav-link active"
+                  aria-current="page"
+                >
+                  <i class="bi bi-gear me-2"></i>
+                  Configurações
+                </a>
+              </li>
+            </ul>
+            <hr />
+            <div class="dropdown">
+              <a
+                href="#"
+                class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                id="dropdownUser1"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="bi bi-person-circle me-2"></i>
+                <strong>Admin</strong>
+              </a>
+              <ul
+                class="dropdown-menu dropdown-menu-dark text-small shadow"
+                aria-labelledby="dropdownUser1"
+              >
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('logout') }}"
+                    >Sair</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-10 main-content">
+          <div class="card">
+            <div class="card-header">
+              <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    id="profiles-tab"
+                    data-bs-toggle="tab"
+                    href="#profiles"
+                    >Perfis de Usuário</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    id="boards-tab"
+                    data-bs-toggle="tab"
+                    href="#boards"
+                    >Pranchas de Comunicação</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    id="system-tab"
+                    data-bs-toggle="tab"
+                    href="#system"
+                    >Configurações do Sistema</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div class="card-body">
+              <div class="tab-content">
+                <!-- Perfis de Usuário -->
+                <div class="tab-pane fade show active" id="profiles">
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-4"
+                  >
+                    <h5>Gerenciar Perfis</h5>
+                    <button
+                      class="btn btn-primary"
+                      data-bs-toggle="modal"
+                      data-bs-target="#addProfileModal"
+                    >
+                      <i class="bi bi-plus-circle me-2"></i>Novo Perfil
+                    </button>
+                  </div>
+
+                  <div id="profilesList">
+                    <div class="profile-card">
+                      <div
+                        class="d-flex justify-content-between align-items-center"
+                      >
+                        <div>
+                          <h5>Usuário 1</h5>
+                          <p class="mb-0 text-muted">Criado em: 11/05/2025</p>
+                        </div>
+                        <div>
+                          <button
+                            class="btn btn-sm btn-outline-primary me-2"
+                            onclick="editProfile('user1')"
+                          >
+                            <i class="bi bi-pencil"></i>
+                          </button>
+                          <button
+                            class="btn btn-sm btn-outline-danger"
+                            onclick="deleteProfile('user1')"
+                          >
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Pranchas de Comunicação -->
+                <div class="tab-pane fade" id="boards">
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-4"
+                  >
+                    <h5>Gerenciar Pranchas</h5>
+                    <button
+                      class="btn btn-primary"
+                      data-bs-toggle="modal"
+                      data-bs-target="#addBoardModal"
+                    >
+                      <i class="bi bi-plus-circle me-2"></i>Nova Prancha
+                    </button>
+                  </div>
+
+                  <div id="boardsList">
+                    <div class="board-item">
+                      <div
+                        class="d-flex justify-content-between align-items-center"
+                      >
+                        <div>
+                          <h5>Prancha Padrão</h5>
+                          <p class="mb-0 text-muted">
+                            15 teclas • Padrão do sistema
+                          </p>
+                          <div class="mt-2">
+                            <span class="key-preview grey">❓</span>
+                            <span class="key-preview yellow">👤</span>
+                            <span class="key-preview green">🎯</span>
+                            <span class="key-preview pink">😔</span>
+                          </div>
+                        </div>
+                        <div>
+                          <button
+                            class="btn btn-sm btn-outline-primary me-2"
+                            onclick="editBoard('default')"
+                          >
+                            <i class="bi bi-pencil"></i>
+                          </button>
+                          <button
+                            class="btn btn-sm btn-outline-secondary"
+                            onclick="duplicateBoard('default')"
+                          >
+                            <i class="bi bi-files"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Configurações do Sistema -->
+                <div class="tab-pane fade" id="system">
+                  <h5 class="mb-4">Configurações Gerais</h5>
+
+                  <form id="systemSettingsForm">
+                    <div class="mb-3">
+                      <label for="mouseSpeed" class="form-label"
+                        >Velocidade do Mouse</label
+                      >
+                      <input
+                        type="range"
+                        class="form-range"
+                        id="mouseSpeed"
+                        min="0.1"
+                        max="1"
+                        step="0.1"
+                        value="0.3"
+                      />
+                      <div class="d-flex justify-content-between">
+                        <small class="text-muted">Lento</small>
+                        <small class="text-muted">Rápido</small>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="dwellTime" class="form-label"
+                        >Tempo de Permanência (ms)</label
+                      >
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="dwellTime"
+                        value="1000"
+                        min="500"
+                        max="5000"
+                        step="100"
+                      />
+                      <small class="text-muted"
+                        >Tempo necessário para considerar uma seleção</small
+                      >
+                    </div>
+
+                    <div class="form-check form-switch mb-3">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="autoSave"
+                        checked
+                      />
+                      <label class="form-check-label" for="autoSave"
+                        >Salvar comunicações automaticamente</label
+                      >
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                      Salvar Configurações
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modais -->
+    <!-- Modal Adicionar Perfil -->
+    <div
+      class="modal fade"
+      id="addProfileModal"
+      tabindex="-1"
+      aria-labelledby="addProfileModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addProfileModalLabel">Novo Perfil</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addProfileForm">
+              <div class="mb-3">
+                <label for="profileName" class="form-label"
+                  >Nome do Usuário</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="profileName"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="profileDescription" class="form-label"
+                  >Descrição (opcional)</label
+                >
+                <textarea
+                  class="form-control"
+                  id="profileDescription"
+                  rows="2"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="saveProfile()"
+            >
+              Salvar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Adicionar Prancha -->
+    <div
+      class="modal fade"
+      id="addBoardModal"
+      tabindex="-1"
+      aria-labelledby="addBoardModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addBoardModalLabel">
+              Nova Prancha de Comunicação
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addBoardForm">
+              <div class="mb-3">
+                <label for="boardName" class="form-label"
+                  >Nome da Prancha</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="boardName"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Teclas de Comunicação</label>
+                <div class="alert alert-info">
+                  <i class="bi bi-info-circle me-2"></i>
+                  Configure até 15 teclas para esta prancha. Cada tecla deve ter
+                  um texto e um ícone.
+                </div>
+
+                <div id="keysContainer" class="border rounded p-3 mb-3">
+                  <!-- Template para uma tecla -->
+                  <div class="row mb-3 key-row">
+                    <div class="col-md-1">
+                      <label class="form-label">1</label>
+                    </div>
+                    <div class="col-md-3">
+                      <input
+                        type="text"
+                        class="form-control key-text"
+                        placeholder="Texto da tecla"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-2">
+                      <input
+                        type="text"
+                        class="form-control key-icon"
+                        placeholder="Ícone"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-3">
+                      <select class="form-select key-category">
+                        <option value="grey">Cinza</option>
+                        <option value="yellow">Amarelo</option>
+                        <option value="green">Verde</option>
+                        <option value="pink">Rosa</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-outline-danger remove-key-btn"
+                      >
+                        <i class="bi bi-trash"></i> Remover
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-primary"
+                  id="addKeyBtn"
+                >
+                  <i class="bi bi-plus-circle me-2"></i>Adicionar Tecla
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" onclick="saveBoard()">
+              Salvar Prancha
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+  </body>
+</html>

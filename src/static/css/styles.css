@@ -1,0 +1,99 @@
+/* Estilos gerais */
+body {
+  background-color: #f8f9fa;
+}
+
+/* Sidebar */
+.sidebar {
+  min-height: 100vh;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Conteúdo principal */
+.main-content {
+  padding: 20px;
+}
+
+/* Webcam container */
+.webcam-container {
+  height: 240px;
+  overflow: hidden;
+  background-color: #000;
+  border-radius: 0 0 5px 5px;
+}
+
+/* Loading overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  display: none;
+}
+
+/* Animações */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.keyboard-key.active {
+  animation: pulse 0.5s ease-in-out;
+}
+
+/* Estilo para o modo de frase */
+#currentPhrase {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.phrase-content {
+  min-height: 40px;
+}
+
+.phrase-item {
+  display: inline-block;
+  padding: 2px 6px;
+  margin-right: 4px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.phrase-item.category-grey {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+.phrase-item.category-yellow {
+  background-color: #fff3cd;
+  color: #664d03;
+}
+
+.phrase-item.category-green {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+.phrase-item.category-pink {
+  background-color: #f8d7da;
+  color: #842029;
+}
+
+.phrase-item.category-phrase {
+  background-color: #cfe2ff;
+  color: #084298;
+}

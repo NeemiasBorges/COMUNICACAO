@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Histórico - Rastreamento Ocular</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+    <style>
+      .sidebar {
+        min-height: 100vh;
+      }
+
+      .main-content {
+        padding: 20px;
+      }
+
+      .history-item {
+        border-left: 4px solid #0d6efd;
+        padding-left: 15px;
+        margin-bottom: 15px;
+      }
+
+      .history-time {
+        font-size: 0.8rem;
+        color: #6c757d;
+      }
+
+      .history-message {
+        font-weight: 500;
+      }
+
+      .history-category {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        color: white;
+        margin-right: 5px;
+      }
+
+      .history-category.grey {
+        background-color: #808080;
+      }
+      .history-category.yellow {
+        background-color: #ffd700;
+        color: black;
+      }
+      .history-category.green {
+        background-color: #90ee90;
+        color: black;
+      }
+      .history-category.pink {
+        background-color: #ffb6c1;
+        color: black;
+      }
+
+      .empty-history {
+        text-align: center;
+        padding: 50px;
+        color: #6c757d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-2 bg-dark text-white sidebar p-0">
+          <div class="d-flex flex-column flex-shrink-0 p-3 h-100">
+            <a
+              href="/"
+              class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
+            >
+              <span class="fs-4">ComuniAcao</span>
+            </a>
+            <hr />
+            <ul class="nav nav-pills flex-column mb-auto">
+              <li class="nav-item">
+                <a href="{{ url_for('index') }}" class="nav-link text-white">
+                  <i class="bi bi-grid me-2"></i>
+                  Comunicação
+                </a>
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('calibration') }}"
+                  class="nav-link text-white"
+                >
+                  <i class="bi bi-bullseye me-2"></i>
+                  Calibração
+                </a>
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('history') }}"
+                  class="nav-link active"
+                  aria-current="page"
+                >
+                  <i class="bi bi-clock-history me-2"></i>
+                  Histórico
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('settings') }}" class="nav-link text-white">
+                  <i class="bi bi-gear me-2"></i>
+                  Configurações
+                </a>
+              </li>
+            </ul>
+            <hr />
+            <div class="dropdown">
+              <a
+                href="#"
+                class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                id="dropdownUser1"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="bi bi-person-circle me-2"></i>
+                <strong>Admin</strong>
+              </a>
+              <ul
+                class="dropdown-menu dropdown-menu-dark text-small shadow"
+                aria-labelledby="dropdownUser1"
+              >
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('logout') }}"
+                    >Sair</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-10 main-content">
+          <div class="card">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <h5>
+                <i class="bi bi-clock-history me-2"></i>Histórico de Comunicação
+              </h5>
+              <div>
+                <button
+                  id="clearHistoryBtn"
+                  class="btn btn-sm btn-outline-danger"
+                >
+                  <i class="bi bi-trash me-1"></i>Limpar Histórico
+                </button>
+                <button
+                  id="exportHistoryBtn"
+                  class="btn btn-sm btn-outline-primary ms-2"
+                >
+                  <i class="bi bi-download me-1"></i>Exportar
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <select
+                  id="userFilter"
+                  class="form-select form-select-sm w-auto d-inline-block me-2"
+                >
+                  <option value="all">Todos os Usuários</option>
+                  <option value="Usuario 1">Usuário 1</option>
+                </select>
+                <select
+                  id="dateFilter"
+                  class="form-select form-select-sm w-auto d-inline-block"
+                >
+                  <option value="all">Todas as Datas</option>
+                  <option value="today">Hoje</option>
+                  <option value="yesterday">Ontem</option>
+                  <option value="week">Última Semana</option>
+                  <option value="month">Último Mês</option>
+                </select>
+              </div>
+
+              <div id="historyContainer">
+                <!-- History will be loaded dynamically here -->
+                <div class="empty-history" id="emptyHistory">
+                  <i class="bi bi-inbox display-1"></i>
+                  <h4 class="mt-3">Nenhuma comunicação registrada</h4>
+                  <p>
+                    As mensagens selecionadas através do rastreamento ocular
+                    aparecerão aqui.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/history.js') }}"></script>
+  </body>
+</html>
