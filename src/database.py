@@ -18,7 +18,70 @@ def init_database():
             mode TEXT
         )
     ''')
-    
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS USUARIO (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            senha TEXT NOT NULL
+        )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS CONFIGURACOES (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            usuario_id INTEGER NOT NULL,
+            usa_modoNoturno INTEGER DEFAULT 0,
+            tamanhoDaFonte INTEGER DEFAULT 12,
+            usar_ajudaVisual INTEGER DEFAULT 0,
+            velocidadeMouse INTEGER DEFAULT 5,
+            FOREIGN KEY (usuario_id) REFERENCES USUARIO(id) ON DELETE CASCADE
+        )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS FUNCAO (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            titulo TEXT NOT NULL,
+            layout TEXT,
+            usuario_id INTEGER NOT NULL,
+            FOREIGN KEY (usuario_id) REFERENCES USUARIO(id) ON DELETE CASCADE
+        )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS CALIBRACAO (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            usuario_id INTEGER NOT NULL,
+            data_calibracao TEXT NOT NULL,
+            parametros TEXT,
+            FOREIGN KEY (usuario_id) REFERENCES USUARIO(id) ON DELETE CASCADE
+        )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS SIMBOLO (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            categoria TEXT,
+            imagem TEXT,
+            funcao_id INTEGER,
+            FOREIGN KEY (funcao_id) REFERENCES FUNCAO(id) ON DELETE CASCADE
+        )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS BUSCA (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            termos TEXT,
+            filtros TEXT,
+            usuario_id INTEGER,
+            data_busca TEXT DEFAULT (datetime('now')),
+            FOREIGN KEY (usuario_id) REFERENCES USUARIO(id) ON DELETE SET NULL
+        )
+    ''')
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS phrases (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,7 +92,7 @@ def init_database():
             profile TEXT
         )
     ''')
-    
+
     conn.commit()
     conn.close()
     return db_path
